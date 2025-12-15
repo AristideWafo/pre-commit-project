@@ -1,5 +1,8 @@
 package com.voteguar.app.votingsession;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Collections;
-import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -26,28 +26,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(VotingSessionController.class)
 class VotingSessionControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private VotingSessionService votingSessionService;
+    @MockitoBean private VotingSessionService votingSessionService;
 
     @Test
     void getAllSessions_ShouldReturnOk_WhenSessionsExist() throws Exception {
         VotingSessionDTO dto = VotingSessionDTOTestMother.complete();
-        Page<VotingSessionDTO> page = new PageImpl<>(
-                Collections.singletonList(dto),
-                PageRequest.of(0, 10),
-                1
-        );
+        Page<VotingSessionDTO> page =
+                new PageImpl<>(Collections.singletonList(dto), PageRequest.of(0, 10), 1);
         when(votingSessionService.getAllVotingSessions(any())).thenReturn(page);
 
-        mockMvc.perform(get("/sessions")
-                        .param("page", "0")
-                        .param("size", "10"))
+        mockMvc.perform(get("/sessions").param("page", "0").param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(page)));
     }
@@ -59,10 +51,15 @@ class VotingSessionControllerTest {
 
         mockMvc.perform(get("/sessions/1"))
                 .andExpect(status().isOk())
-                .andDo(result -> {
-                    System.out.println("GET Response body: '" + result.getResponse().getContentAsString() + "'");
-                    System.out.println("GET Content type: " + result.getResponse().getContentType());
-                });
+                .andDo(
+                        result -> {
+                            System.out.println(
+                                    "GET Response body: '"
+                                            + result.getResponse().getContentAsString()
+                                            + "'");
+                            System.out.println(
+                                    "GET Content type: " + result.getResponse().getContentType());
+                        });
     }
 
     @Test
@@ -78,17 +75,20 @@ class VotingSessionControllerTest {
         createdSession.setDeleted(false);
 
         VotingSessionDTO expectedDTO = VotingSessionDTO.toDTO(createdSession);
-        when(votingSessionService.createVotingSession(any(CreateVotingSessionDTO.class))).thenReturn(expectedDTO);
+        when(votingSessionService.createVotingSession(any(CreateVotingSessionDTO.class)))
+                .thenReturn(expectedDTO);
         String jsonRequest = objectMapper.writeValueAsString(createDTO);
 
         // Act & Assert
-        mockMvc.perform(post("/sessions")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(jsonRequest))
+        mockMvc.perform(
+                        post("/sessions")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .content(jsonRequest))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(content().json(objectMapper.writeValueAsString(expectedDTO)));}
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedDTO)));
+    }
 
     @Test
     void deleteSession_ShouldReturnNoContent_WhenSessionExists() throws Exception {
@@ -99,7 +99,6 @@ class VotingSessionControllerTest {
         when(votingSessionService.deleteVotingSession(id)).thenReturn(Optional.of(session));
 
         // Act & Assert
-        mockMvc.perform(delete("/sessions/" + id))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/sessions/" + id)).andExpect(status().isNoContent());
     }
 }

@@ -1,13 +1,13 @@
 package com.voteguar.app.votingsession;
 
+import java.util.Optional;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,7 +40,8 @@ public class VotingSessionServiceImpl implements VotingSessionService {
     @Override
     public Optional<VotingSessionDTO> getVotingSessionById(Long id) {
         log.debug("Fetching voting session with id: {}", id);
-        return votingSessionRepository.findById(id)
+        return votingSessionRepository
+                .findById(id)
                 .filter(session -> !session.isDeleted()) // Don't return deleted sessions
                 .map(VotingSessionDTO::toDTO);
     }
@@ -48,23 +49,25 @@ public class VotingSessionServiceImpl implements VotingSessionService {
     @Override
     public Page<VotingSessionDTO> getAllVotingSessions(Pageable pageable) {
         log.debug("Fetching all voting sessions with pagination: {}", pageable);
-        return votingSessionRepository.findByDeletedFalse(pageable)
-                .map(VotingSessionDTO::toDTO);
+        return votingSessionRepository.findByDeletedFalse(pageable).map(VotingSessionDTO::toDTO);
     }
 
     @Override
     @Transactional
     public Optional<VotingSession> deleteVotingSession(Long id) {
         log.info("Deleting voting session with id: {}", id);
-        return votingSessionRepository.findById(id)
-                .map(votingSession -> {
-                    if (!votingSession.isDeleted()) {
-                        votingSession.setDeleted(true);
-                        votingSessionRepository.save(votingSession);
-                        return votingSession;
-                    }
-                    return null; // Return null if already deleted, resulting in Optional.empty()
-                });
+        return votingSessionRepository
+                .findById(id)
+                .map(
+                        votingSession -> {
+                            if (!votingSession.isDeleted()) {
+                                votingSession.setDeleted(true);
+                                votingSessionRepository.save(votingSession);
+                                return votingSession;
+                            }
+                            return null; // Return null if already deleted, resulting in
+                            // Optional.empty()
+                        });
     }
 
     @Override
@@ -72,21 +75,23 @@ public class VotingSessionServiceImpl implements VotingSessionService {
     public Optional<VotingSession> activateVotingSession(Long id) {
         log.info("Activating voting session with id: {}", id);
 
-        return votingSessionRepository.findById(id)
-                .map(votingSession -> {
-                   /*LocalDateTime now = LocalDateTime.now();
-                    if (votingSession.getStartDate().isAfter(now)) {
-                        throw new IllegalStateException("Cannot activate session before start date");
-                    }
-                    if (votingSession.getEndDate().isBefore(now)) {
-                        throw new IllegalStateException("Cannot activate session after end date");
-                    }*/
+        return votingSessionRepository
+                .findById(id)
+                .map(
+                        votingSession -> {
+                            /*LocalDateTime now = LocalDateTime.now();
+                            if (votingSession.getStartDate().isAfter(now)) {
+                                throw new IllegalStateException("Cannot activate session before start date");
+                            }
+                            if (votingSession.getEndDate().isBefore(now)) {
+                                throw new IllegalStateException("Cannot activate session after end date");
+                            }*/
 
-                    votingSession.setStatus(VotingSessionStatus.ACTIVE);
-                    votingSessionRepository.save(votingSession);
+                            votingSession.setStatus(VotingSessionStatus.ACTIVE);
+                            votingSessionRepository.save(votingSession);
 
-                    log.info("Successfully activated voting session with id: {}", id);
-                    return votingSession;
-                });
+                            log.info("Successfully activated voting session with id: {}", id);
+                            return votingSession;
+                        });
     }
 }

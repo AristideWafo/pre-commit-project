@@ -1,5 +1,8 @@
 package com.voteguar.app.votingsession;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,9 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collections;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
@@ -22,11 +22,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class VotingSessionServiceImplTest {
 
-    @Mock
-    private VotingSessionRepository repository;
+    @Mock private VotingSessionRepository repository;
 
-    @InjectMocks
-    private VotingSessionServiceImpl service;
+    @InjectMocks private VotingSessionServiceImpl service;
 
     @Test
     void getVotingSessionById_ShouldReturnDTO_WhenSessionExists() {

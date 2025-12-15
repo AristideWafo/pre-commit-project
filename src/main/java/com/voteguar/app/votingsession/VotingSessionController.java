@@ -20,12 +20,15 @@ public class VotingSessionController {
     private final VotingSessionService votingSessionService;
 
     @PostMapping
-    public ResponseEntity<VotingSessionDTO> createSession(@RequestBody CreateVotingSessionDTO createDTO) {
+    public ResponseEntity<VotingSessionDTO> createSession(
+            @RequestBody CreateVotingSessionDTO createDTO) {
         VotingSessionDTO createdSession = votingSessionService.createVotingSession(createDTO);
         // ADD THESE DEBUG LINES
         System.out.println("=== CONTROLLER DEBUG ===");
         System.out.println("Service returned: " + createdSession);
-        System.out.println("Service returned ID: " + (createdSession != null ? createdSession.getId() : "NULL"));
+        System.out.println(
+                "Service returned ID: "
+                        + (createdSession != null ? createdSession.getId() : "NULL"));
         System.out.println("About to return ResponseEntity with: " + createdSession);
 
         return new ResponseEntity<>(createdSession, HttpStatus.CREATED);
@@ -33,8 +36,10 @@ public class VotingSessionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<VotingSessionDTO> getSessionById(@PathVariable Long id) {
-        VotingSessionDTO sessionDTO = votingSessionService.getVotingSessionById(id)
-                .orElseThrow(() -> new RuntimeException("VotingSession not found"));
+        VotingSessionDTO sessionDTO =
+                votingSessionService
+                        .getVotingSessionById(id)
+                        .orElseThrow(() -> new RuntimeException("VotingSession not found"));
         return new ResponseEntity<>(sessionDTO, HttpStatus.OK);
     }
 

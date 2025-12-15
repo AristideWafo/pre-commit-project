@@ -45,12 +45,25 @@ tasks.named('test') {
 // ========================================
 spotless {
 	java {
+		// Applique Google Java Format
 		googleJavaFormat('1.19.2').aosp().reflowLongStrings()
+		
+		// Retire les imports inutilisés
 		removeUnusedImports()
+		
+		// Formate les imports dans l'ordre : java, javax, puis le reste
 		importOrder('java', 'javax', '', '\\#')
+		
+		// Nettoie les espaces en fin de ligne
 		trimTrailingWhitespace()
+		
+		// Ajoute une ligne vide en fin de fichier
 		endWithNewline()
+		
+		// Cible tous les fichiers Java
 		target 'src/**/*.java'
+		
+		// Exclut les fichiers générés
 		targetExclude 'build/**', 'bin/**'
 	}
 }
