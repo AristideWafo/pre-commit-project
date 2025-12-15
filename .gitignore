@@ -1,0 +1,90 @@
+# ======================
+# Java & Build Artifacts
+# ======================
+
+*.class
+*.log
+hs_err_pid*
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+/target/
+/pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle (if applicable)
+/.gradle/
+/build/
+!gradle-wrapper.jar
+.gradle-app.setting
+.gradletasknamecache
+
+# ======================
+# IDEs & Editors
+# ======================
+
+# Eclipse / STS
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+.local.properties
+.settings/
+.loadpath
+.recommenders/
+.externalToolBuilders/
+*.launch
+.apt_generated/
+.factorypath
+.project
+.springBeans/
+.sts4-cache/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+
+# ======================
+# OS-generated files & misc
+# ======================
+*.DS_Store
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+*.orig
+*~ 
+*.sw?
+
+# ======================
+# Custom local files (e.g. credentials, environment)
+// Add local sensitive files you don't want checked in:
+.env
+env.properties
